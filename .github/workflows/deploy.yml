@@ -34,8 +34,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build root app
         run: npm run build
+
+      - name: Build admin portal
+        working-directory: admin-portal
+        run: npm ci && npm run build
+
+      - name: Build customer portal
+        working-directory: customer-portal
+        run: npm ci && npm run build
+
+      - name: Combine applications
+        shell: bash
+        run: |
+          mkdir -p dist/admin-portal dist/customer-portal
+          cp -R admin-portal/dist/. dist/admin-portal/
+          cp -R customer-portal/dist/. dist/customer-portal/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
